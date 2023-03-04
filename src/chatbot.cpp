@@ -44,8 +44,79 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(const ChatBot& other)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    _rootNode = other._rootNode;
+    _currentNode = other._currentNode;
+    _image = new wxBitmap(*other._image);
 
-////
+    _chatLogic = other._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+
+
+}
+
+ChatBot::ChatBot(ChatBot&& other) noexcept 
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+    _rootNode = other._rootNode;
+    _currentNode = other._currentNode;
+    _image = other._image;
+
+    _chatLogic = other._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+
+    other._chatLogic = nullptr;
+    other._rootNode = nullptr;
+    other._currentNode = nullptr;
+    other._image = NULL;
+}
+
+ChatBot& ChatBot::operator=(const ChatBot& other)
+{
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    if (this != &other) 
+    {        
+        _rootNode = other._rootNode;
+        _currentNode = other._currentNode;
+        _image = new wxBitmap(*other._image);
+
+        _chatLogic = other._chatLogic;
+        _chatLogic->SetChatbotHandle(this); 
+
+    }
+    return *this;
+}
+
+ChatBot& ChatBot::operator=(ChatBot&& other) noexcept
+{
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+    if (this != &other) 
+    {        
+
+        // delete old data
+        if(_image != NULL) 
+        {
+            delete _image;
+        }
+
+        _image = other._image; 
+        _rootNode = other._rootNode;
+        _currentNode = other._currentNode;
+        _image = other._image;
+
+        _chatLogic = other._chatLogic;
+        _chatLogic->SetChatbotHandle(this);
+        
+        other._chatLogic = nullptr;
+        other._rootNode = nullptr;
+        other._currentNode = nullptr;
+        other._image = NULL;    
+
+    }
+    return *this;
+}
 //// EOF STUDENT CODE
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
